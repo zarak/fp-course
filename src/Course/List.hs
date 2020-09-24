@@ -120,7 +120,7 @@ length ::
   List a
   -> Int
 length =
-  error "todo: Course.List#length"
+  foldRight (\_ acc -> acc + 1) 0
 
 -- | Map the given function on each element of the list.
 --
@@ -134,8 +134,8 @@ map ::
   (a -> b)
   -> List a
   -> List b
-map =
-  error "todo: Course.List#map"
+map f =
+  foldRight (\e acc -> f e :. acc) Nil
 
 -- | Return elements satisfying the given predicate.
 --
@@ -151,8 +151,8 @@ filter ::
   (a -> Bool)
   -> List a
   -> List a
-filter =
-  error "todo: Course.List#filter"
+filter f =
+  foldRight (\e acc -> if f e then e :. acc else acc) Nil
 
 -- | Append two lists to a new list.
 --
@@ -170,8 +170,10 @@ filter =
   List a
   -> List a
   -> List a
-(++) =
-  error "todo: Course.List#(++)"
+(++) Nil x = x
+(++) x Nil = x
+(++) (x :. xs) ys = x :.  xs ++ ys
+  
 
 infixr 5 ++
 
