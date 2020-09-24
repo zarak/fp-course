@@ -246,7 +246,17 @@ seqOptional ::
   List (Optional a)
   -> Optional (List a)
 seqOptional Nil = Full Nil
-seqOptional (Full x :. xs) = undefined
+seqOptional (x :. xs)
+  | findEmpty (x :. xs) = Empty
+  | otherwise = undefined 
+    
+findEmpty :: List (Optional a) -> Bool
+findEmpty xs = length (filter f xs) > 0
+    where f Empty = True
+          f (Full _) = False
+
+
+
   
 
 -- | Find the first element in the list matching the predicate.
