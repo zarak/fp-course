@@ -131,7 +131,7 @@ instance Applicative ((->) t) where
     ((->) t (a -> b))
     -> ((->) t a)
     -> ((->) t b)
-  (<*>) = undefined
+  f <*> g = \x -> f x (g x)
     
 
 
@@ -331,8 +331,10 @@ sequence ::
   Applicative f =>
   List (f a)
   -> f (List a)
-sequence = foldRight (lift2 (:.)) (pure Nil)
+--sequence = foldRight (lift2 (:.)) (pure Nil)
 --with help from https://stackoverflow.com/questions/53113289/haskell-function-using-applicative-and-functor
+sequence Nil = pure Nil
+sequence (x :. xs) = (:.) <$> x <*> sequence xs
 
 
 -- | Replicate an effect a given number of times.
@@ -356,8 +358,8 @@ replicateA ::
   Int
   -> f a
   -> f (List a)
-replicateA n item =
-    foldRight (replicate n) ()
+replicateA n item = sequence $ replicate n item
+    
 
 -- | Filter a list with a predicate that produces an effect.
 --
@@ -384,8 +386,7 @@ filtering ::
   (a -> f Bool)
   -> List a
   -> f (List a)
-filtering =
-  error "todo: Course.Applicative#filtering"
+filtering p items = undefined
 
 -----------------------
 -- SUPPORT LIBRARIES --
