@@ -245,15 +245,18 @@ flattenAgain =
 seqOptional ::
   List (Optional a)
   -> Optional (List a)
-seqOptional Nil = Full Nil
-seqOptional (x :. xs)
-  | findEmpty (x :. xs) = Empty
-  | otherwise = undefined 
+seqOptional = foldRight (twiceOptional (:.)) (Full Nil)
+
+
+-- seqOptional Nil = Full Nil
+--seqOptional (x :. xs)
+  -- | findEmpty (x :. xs) = Empty
+  -- | otherwise = undefined 
     
-findEmpty :: List (Optional a) -> Bool
-findEmpty xs = length (filter f xs) > 0
-    where f Empty = True
-          f (Full _) = False
+--findEmpty :: List (Optional a) -> Bool
+--findEmpty xs = length (filter f xs) > 0
+    --where f Empty = True
+          --f (Full _) = False
 
 
 
@@ -346,7 +349,7 @@ produce f x = x :. produce f (f x)
 notReverse ::
   List a
   -> List a
-notReverse Nil = Nil
+notReverse = reverse
 
 ---- End of list exercises
 
