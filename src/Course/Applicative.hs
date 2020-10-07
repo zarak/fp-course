@@ -164,8 +164,8 @@ lift2 ::
   -> f a
   -> f b
   -> f c
-lift2 op a b=
-    op <$> a <*> b
+lift2 op a =
+    (op <$> a <*>)
   
 
 -- | Apply a ternary function in the environment.
@@ -198,8 +198,8 @@ lift3 ::
   -> f b
   -> f c
   -> f d
-lift3 op a b c =
-    op <$> a <*> b <*> c
+lift3 op a b =
+    (op <$> a <*> b <*>)
 
 -- | Apply a quaternary function in the environment.
 -- /can be written using `lift3` and `(<*>)`./
@@ -259,8 +259,8 @@ lift1 ::
   (a -> b)
   -> f a
   -> f b
-lift1 op a=
-  op <$> a
+lift1 op =
+  (op <$>) 
 
 -- | Apply, discarding the value of the first argument.
 -- Pronounced, right apply.
@@ -312,8 +312,8 @@ lift1 op a=
   f b
   -> f a
   -> f b
-(<*) fa fb =
-  const <$> fa <*> fb
+(<*) fa =
+  (const <$> fa <*>)
 
 -- | Sequences a list of structures to a structure of list.
 --
