@@ -72,9 +72,11 @@ instance Applicative List where
     List (a -> b)
     -> List a
     -> List b
-  Nil <*> _ = Nil
-  _ <*> Nil = Nil
-  (f :. fs) <*> (x :. xs) = f x :. (f <$> xs) ++ ((<*>) fs (x :. xs))
+  --Nil <*> _ = Nil
+  --_ <*> Nil = Nil
+  --(f :. fs) <*> (x :. xs) = f x :. (f <$> xs) ++ ((<*>) fs (x :. xs))
+  (<*>) f a = flatMap (flip map a) f
+
 
 -- | Insert into an Optional.
 --
@@ -386,7 +388,12 @@ filtering ::
   (a -> f Bool)
   -> List a
   -> f (List a)
-filtering p items = undefined
+filtering p xs = undefined
+
+wrappedIf :: (Optional Bool) -> a -> a -> a
+wrappedIf fp t f = case fp of
+                   Full a -> if a then t else f
+                   Empty -> f
 
 -----------------------
 -- SUPPORT LIBRARIES --
