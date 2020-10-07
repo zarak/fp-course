@@ -75,7 +75,8 @@ instance Applicative List where
   --Nil <*> _ = Nil
   --_ <*> Nil = Nil
   --(f :. fs) <*> (x :. xs) = f x :. (f <$> xs) ++ ((<*>) fs (x :. xs))
-  (<*>) f a = flatMap (flip map a) f
+  (<*>) f a =
+      flatMap (flip map a) f
 
 
 -- | Insert into an Optional.
@@ -100,9 +101,11 @@ instance Applicative Optional where
     Optional (a -> b)
     -> Optional a
     -> Optional b
-  Empty <*> _ = Empty
-  _ <*> Empty = Empty
-  (Full f) <*> (Full a) = Full (f a)
+  --Empty <*> _ = Empty
+  --_ <*> Empty = Empty
+  --(Full f) <*> (Full a) = Full (f a)
+  (<*>) f a =
+      bindOptional (flip mapOptional a) f
 
 
 -- | Insert into a constant function.
@@ -133,9 +136,8 @@ instance Applicative ((->) t) where
     ((->) t (a -> b))
     -> ((->) t a)
     -> ((->) t b)
-  f <*> g = \x -> f x (g x)
-    
-
+  (<*>) tab ta t =
+      tab t (ta t)
 
 -- | Apply a binary function in the environment.
 --
@@ -284,7 +286,7 @@ lift1 op a=
   -> f b
   -> f b
 (*>) fa fb =
-    (\_ b -> b) <$> fa <*> fb
+    (flip const) <$> fa <*> fb
   
 
 -- | Apply, discarding the value of the second argument.
