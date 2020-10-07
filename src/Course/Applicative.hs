@@ -337,8 +337,9 @@ sequence ::
   -> f (List a)
 --sequence = foldRight (lift2 (:.)) (pure Nil)
 --with help from https://stackoverflow.com/questions/53113289/haskell-function-using-applicative-and-functor
-sequence Nil = pure Nil
-sequence (x :. xs) = (:.) <$> x <*> sequence xs
+--sequence Nil = pure Nil
+--sequence (x :. xs) = (:.) <$> x <*> sequence xs
+sequence fa = undefined
 
 
 -- | Replicate an effect a given number of times.

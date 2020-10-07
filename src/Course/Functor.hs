@@ -102,8 +102,8 @@ instance Functor ((->) t) where
   a
   -> f b
   -> f a
-(<$) c fb =
-  const c <$> fb
+(<$) c =
+    (const c <$>)
 
 -- | Anonymous map producing unit value.
 --
