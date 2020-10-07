@@ -285,8 +285,8 @@ lift1 op a=
   f a
   -> f b
   -> f b
-(*>) fa fb =
-    (flip const) <$> fa <*> fb
+(*>) =
+    lift2 (flip const)
   
 
 -- | Apply, discarding the value of the second argument.
