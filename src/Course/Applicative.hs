@@ -391,12 +391,9 @@ filtering ::
   (a -> f Bool)
   -> List a
   -> f (List a)
-filtering p xs = undefined
+--filtering p la = sequence $ filter (\x -> _todo) la
+filtering p la = foldRight (\a fas -> lift2 (\b xs -> if b then a :. xs else xs) (p a) fas) (pure Nil) la
 
-wrappedIf :: (Optional Bool) -> a -> a -> a
-wrappedIf fp t f = case fp of
-                   Full a -> if a then t else f
-                   Empty -> f
 
 -----------------------
 -- SUPPORT LIBRARIES --
