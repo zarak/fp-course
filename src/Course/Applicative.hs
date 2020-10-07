@@ -339,7 +339,7 @@ sequence ::
 --with help from https://stackoverflow.com/questions/53113289/haskell-function-using-applicative-and-functor
 --sequence Nil = pure Nil
 --sequence (x :. xs) = (:.) <$> x <*> sequence xs
-sequence fa = undefined
+sequence = foldRight (lift2 (:.)) (pure Nil)
 
 
 -- | Replicate an effect a given number of times.
@@ -363,7 +363,7 @@ replicateA ::
   Int
   -> f a
   -> f (List a)
-replicateA n item = sequence $ replicate n item
+replicateA n = (sequence . replicate n)
     
 
 -- | Filter a list with a predicate that produces an effect.
