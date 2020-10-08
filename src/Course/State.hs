@@ -66,7 +66,7 @@ eval sa s =
 get ::
   State s s
 get =
-  error "todo: Course.State#get"
+  State (\s -> (s, s))
 
 -- | A `State` where the resulting state is seeded with the given value.
 --
@@ -75,8 +75,8 @@ get =
 put ::
   s
   -> State s ()
-put =
-  error "todo: Course.State#put"
+put s =
+  State (\_ -> ((), s))
 
 -- | Implement the `Functor` instance for `State s`.
 --
@@ -109,14 +109,16 @@ instance Applicative (State s) where
   pure ::
     a
     -> State s a
-  pure =
-    error "todo: Course.State pure#instance (State s)"
+  pure a =
+    State (\s -> (a, s))
   (<*>) ::
     State s (a -> b)
     -> State s a
     -> State s b 
-  (<*>) =
-    error "todo: Course.State (<*>)#instance (State s)"
+  (<*>) ssab sa =
+      let sab = eval ssab
+      in
+      State (\s -> let ab = sab s in (ab (eval sa s), s))
 
 -- | Implement the `Bind` instance for `State s`.
 --
@@ -130,8 +132,10 @@ instance Monad (State s) where
     (a -> State s b)
     -> State s a
     -> State s b
-  (=<<) =
-    error "todo: Course.State (=<<)#instance (State s)"
+  (=<<) assb sa =
+    State (\s -> let a = eval sa s 
+                     ssb = assb a
+                  in (eval ssb s, exec ssb s))
 
 -- | Find the first element in a `List` that satisfies a given predicate.
 -- It is possible that no element is found, hence an `Optional` result.
