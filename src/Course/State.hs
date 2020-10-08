@@ -38,8 +38,12 @@ exec ::
   State s a
   -> s
   -> s
-exec st =
-  undefined
+exec sa s =
+    let sas = runState sa
+        as = sas s
+    in
+    snd as
+  
 
 -- | Run the `State` seeded with `s` and retrieve the resulting value.
 --
@@ -48,8 +52,12 @@ eval ::
   State s a
   -> s
   -> a
-eval =
-  error "todo: Course.State#eval"
+eval sa s =
+    let sas = runState sa
+        as = sas s
+    in
+    fst as
+  
 
 -- | A `State` where the state also distributes into the produced value.
 --
@@ -80,9 +88,10 @@ instance Functor (State s) where
     -> State s a
     -> State s b
   (<$>) f sa =
-      let sas = runState sa
-       in 
-       State (\s -> let (a, s') = sas s in (f a, s'))
+      --let sas = runState sa
+       --in 
+       --State (\s -> let (a, s') = sas s in (f a, s'))
+       State (\s -> (f(eval sa s), (exec sa s)))
       
 
 -- | Implement the `Applicative` instance for `State s`.
