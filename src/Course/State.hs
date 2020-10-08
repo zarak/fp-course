@@ -38,8 +38,8 @@ exec ::
   State s a
   -> s
   -> s
-exec =
-  error "todo: Course.State#exec"
+exec st =
+  undefined
 
 -- | Run the `State` seeded with `s` and retrieve the resulting value.
 --
@@ -79,8 +79,11 @@ instance Functor (State s) where
     (a -> b)
     -> State s a
     -> State s b
-  (<$>) =
-    error "todo: Course.State#(<$>)"
+  (<$>) f sa =
+      let sas = runState sa
+       in 
+       State (\s -> let (a, s') = sas s in (f a, s'))
+      
 
 -- | Implement the `Applicative` instance for `State s`.
 --
