@@ -116,6 +116,7 @@ getFiles fps =
     let filelist = getFile <$> fps 
     in
     sequence filelist
+    
 
 -- Given a file name, read it and for each line in that file, read and print contents of each.
 -- Use @getFiles@ and @printFiles@.

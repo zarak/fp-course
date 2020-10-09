@@ -119,15 +119,11 @@ instance Applicative (State s) where
       --let sab = eval ssab
       --in
       --State (\s -> let ab = sab s in (ab (eval sa s), s))
-      let sa = runState ssa
-          f = runState sf
-      in 
       State (\s ->
-          let (ab, s1) = f s
-              (a, s2) = sa s1
+          let (ab, s1) = runState sf s
+              (a, s2)  = runState ssa s1
           in
-          (ab a, s2)
-          )
+          (ab a, s2))
 
 -- | Implement the `Bind` instance for `State s`.
 --
@@ -141,10 +137,16 @@ instance Monad (State s) where
     (a -> State s b)
     -> State s a
     -> State s b
-  (=<<) assb sa =
-    State (\s -> let a = eval sa s 
-                     ssb = assb a
-                  in (eval ssb s, exec ssb s))
+  (=<<) assb ssa =
+      State (\s ->
+          let (a, s1) = runState ssa s
+              (b, s2) = runState (assb a) s1
+          in
+          (b, s2))
+    --State (\s -> let a = eval sa s 
+                     --ssb = assb a
+                  --in (eval ssb s, exec ssb s))
+
 
 -- | Find the first element in a `List` that satisfies a given predicate.
 -- It is possible that no element is found, hence an `Optional` result.
