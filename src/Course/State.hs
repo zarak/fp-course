@@ -188,10 +188,8 @@ firstRepeat ::
   Ord a =>
   List a
   -> Optional a
-firstRepeat xs = undefined
-    --let s = State
-    --in
-    --_todo
+firstRepeat xs = findM _todo xs >>= id
+
   
 
 -- | Remove all duplicate elements in a `List`.
