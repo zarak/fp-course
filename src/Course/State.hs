@@ -198,6 +198,12 @@ isRepeat a =
         in if S.member a s then (True, ins) else (False, ins
           ))
   
+isNotRepeat :: Ord a => a -> State (S.Set a) Bool
+isNotRepeat a =
+    State (\s -> 
+        let ins = S.insert a s
+        in if S.notMember a s then (True, ins) else (False, ins
+          ))
 
 -- | Remove all duplicate elements in a `List`.
 -- /Tip:/ Use `filtering` and `State` with a @Data.Set#Set@.
@@ -209,8 +215,8 @@ distinct ::
   Ord a =>
   List a
   -> List a
-distinct =
-  error "todo: Course.State#distinct"
+distinct xs =
+    eval (filtering (isNotRepeat) xs) S.empty
 
 -- | A happy number is a positive integer, where the sum of the square of its digits eventually reaches 1 after repetition.
 -- In contrast, a sad number (not a happy number) is where the sum of the square of its digits never reaches 1
