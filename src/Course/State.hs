@@ -188,8 +188,15 @@ firstRepeat ::
   Ord a =>
   List a
   -> Optional a
-firstRepeat xs = findM _todo xs >>= id
+firstRepeat xs = 
+    eval (findM isRepeat xs) S.empty
 
+isRepeat :: Ord a => a -> State (S.Set a) Bool
+isRepeat a =
+    State (\s -> 
+        let ins = S.insert a s
+        in if S.member a s then (True, ins) else (False, ins
+          ))
   
 
 -- | Remove all duplicate elements in a `List`.
