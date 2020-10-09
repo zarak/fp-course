@@ -167,19 +167,15 @@ findM ::
   (a -> f Bool)
   -> List a
   -> f (Optional a)
-findM p =
-    foldRight 
-        (\a foa ->
-            let pa = p a 
-            in 
-            lift2 (\b oa -> if b then (Full a) else oa) pa foa) (pure Empty)
-         --in lift2 (\x b ->
-            --if b then Full a else x) oa pa)
+findM afp = do
+    --foldRight 
+        --(\a foa ->
+            --let fp = afp a 
+            --in 
+            --lift2 (\p oa -> if p then (Full a) else oa) fp foa) (pure Empty)
+    foldRight (\a foa ->
+        afp a >>= (\p -> if p then pure (Full a) else foa)) (pure Empty)
 
---find _ Nil = Empty
---find p (x :. xs) =
-    --if p x then Full x else find p xs
-  
 
 -- | Find the first element in a `List` that repeats.
 -- It is possible that no element repeats, hence an `Optional` result.
