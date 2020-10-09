@@ -115,10 +115,19 @@ instance Applicative (State s) where
     State s (a -> b)
     -> State s a
     -> State s b 
-  (<*>) ssab sa =
-      let sab = eval ssab
-      in
-      State (\s -> let ab = sab s in (ab (eval sa s), s))
+  (<*>) sf ssa =
+      --let sab = eval ssab
+      --in
+      --State (\s -> let ab = sab s in (ab (eval sa s), s))
+      let sa = runState ssa
+          f = runState sf
+      in 
+      State (\s ->
+          let (ab, s1) = f s
+              (a, s2) = sa s1
+          in
+          (ab a, s2)
+          )
 
 -- | Implement the `Bind` instance for `State s`.
 --
@@ -156,8 +165,14 @@ findM ::
   (a -> f Bool)
   -> List a
   -> f (Optional a)
-findM p as =
-    foldRight (\a -> _todo) (pure Empty) as
+findM p =
+    foldRight 
+        (\a foa ->
+            let pa = p a 
+            in 
+            lift2 (\b oa -> if b then (Full a) else oa) pa foa) (pure Empty)
+         --in lift2 (\x b ->
+            --if b then Full a else x) oa pa)
 
 --find _ Nil = Empty
 --find p (x :. xs) =
@@ -175,8 +190,11 @@ firstRepeat ::
   Ord a =>
   List a
   -> Optional a
-firstRepeat =
-  error "todo: Course.State#firstRepeat"
+firstRepeat xs = undefined
+    --let s = State
+    --in
+    --_todo
+  
 
 -- | Remove all duplicate elements in a `List`.
 -- /Tip:/ Use `filtering` and `State` with a @Data.Set#Set@.
