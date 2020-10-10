@@ -283,6 +283,7 @@ instance Monad f => Applicative (OptionalT f) where
   (<*>) (OptionalT f) (OptionalT foa) =
       OptionalT (f >>= (\oab -> onFull (\e -> (e <$>) <$> foa) oab))
       --OptionalT (f >>= (\oab -> foa >>= (\a -> let x = oab <*> a in pure x)))
+  --
   --(<*>) optf opta =
       --let x = runOptionalT opta
           --y = runOptionalT optf
@@ -295,8 +296,11 @@ instance Monad f => Applicative (OptionalT f) where
 -- >>> runOptionalT $ (\a -> OptionalT (Full (a+1) :. Full (a+2) :. Nil)) =<< OptionalT (Full 1 :. Empty :. Nil)
 -- [Full 2,Full 3,Empty]
 instance Monad f => Monad (OptionalT f) where
-  (=<<) =
-    error "todo: Course.StateT (=<<)#instance (OptionalT f)"
+  (=<<) aoptfb (OptionalT foa) = 
+      let x = foa >>= g
+          g (Full a) = let y = (aoptfb a) in runOptionalT y
+          g Empty = pure Empty
+       in OptionalT x
 
 -- | A `Logger` is a pair of a list of log values (`[l]`) and an arbitrary value (`a`).
 data Logger l a =
