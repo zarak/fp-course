@@ -278,11 +278,14 @@ instance Functor f => Functor (OptionalT f) where
 -- [Full 2,Empty,Full 3,Empty]
 instance Monad f => Applicative (OptionalT f) where
   pure a =
-      let x = pure (Full a)
-      in
-    OptionalT x
-  (<*>) =
-    error "todo: Course.StateT (<*>)#instance (OptionalT f)"
+      let x = pure (pure a)
+       in OptionalT x
+  (<*>) optf opta =
+      let x = runOptionalT opta
+          y = runOptionalT optf
+          z = lift2 (\opa opab -> opab <*> opa) x y
+       in OptionalT z
+       --OptionalT $ onFull (\a -> _todo1) _todo2
 
 -- | Implement the `Monad` instance for `OptionalT f` given a Monad f.
 --
