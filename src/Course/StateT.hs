@@ -232,7 +232,7 @@ greaterThan100 :: (Ord a, Num a) => a -> S.Set a -> Optional (Bool, S.Set a)
 greaterThan100 a s
           | a > 100 = Empty 
           | S.notMember a s = Full (True, ins)
-          | S.member a s = Full (False, ins)
+          | otherwise = Full (False, ins)
               where ins = S.insert a s
 
 -- | An `OptionalT` is a functor of an `Optional` value.
