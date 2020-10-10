@@ -245,15 +245,11 @@ isHappy ::
 isHappy n =
     let x = produce applyHappy n
     in
-    case firstRepeat x of
-      Full 1 -> True
-      _ -> False
-      
+    contains 1 (firstRepeat x)
 
 square :: Integer -> Integer
 square =
     join (*)
-
 
 upToN :: Integer -> List Integer
 upToN n = take n $ produce (+1) 1
