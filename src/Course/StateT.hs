@@ -138,16 +138,19 @@ execT ::
   StateT s f a
   -> s
   -> f s
-execT =
-  error "todo: Course.StateT#execT"
+execT ssfa s =
+    let x = runStateT ssfa s
+     in uncurry (flip const) <$> x
+  
 
 -- | Run the `State` seeded with `s` and retrieve the resulting state.
 exec' ::
   State' s a
   -> s
   -> s
-exec' =
-  error "todo: Course.StateT#exec'"
+exec' ssa s =
+    let eos = execT ssa s
+     in runExactlyOne eos
 
 -- | Run the `StateT` seeded with `s` and retrieve the resulting value.
 evalT ::
@@ -155,16 +158,18 @@ evalT ::
   StateT s f a
   -> s
   -> f a
-evalT =
-  error "todo: Course.StateT#evalT"
+evalT ssfa s =
+    let fas = runStateT ssfa s
+     in uncurry const <$> fas
 
 -- | Run the `State` seeded with `s` and retrieve the resulting value.
 eval' ::
   State' s a
   -> s
   -> a
-eval' =
-  error "todo: Course.StateT#eval'"
+eval' ssa s =
+    let eos = evalT ssa s
+     in runExactlyOne eos
 
 -- | A `StateT` where the state also distributes into the produced value.
 --
@@ -174,7 +179,7 @@ getT ::
   Applicative f =>
   StateT s f s
 getT =
-  error "todo: Course.StateT#getT"
+  StateT (\s -> pure (s, s))
 
 -- | A `StateT` where the resulting state is seeded with the given value.
 --
@@ -187,8 +192,9 @@ putT ::
   Applicative f =>
   s
   -> StateT s f ()
-putT =
-  error "todo: Course.StateT#putT"
+putT s =
+    StateT (\_ -> pure ((), s))
+  
 
 -- | Remove all duplicate elements in a `List`.
 --
