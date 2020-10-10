@@ -114,8 +114,11 @@ type State' s a =
 state' ::
   (s -> (a, s))
   -> State' s a
-state' =
-  error "todo: Course.StateT#state'"
+state' sas =
+    StateT (\s ->
+        let as = sas s
+         in ExactlyOne as
+        )
 
 -- | Provide an unwrapper for `State'` values.
 --
@@ -125,8 +128,9 @@ runState' ::
   State' s a
   -> s
   -> (a, s)
-runState' =
-  error "todo: Course.StateT#runState'"
+runState' ssa =
+    runExactlyOne . runStateT ssa
+  
 
 -- | Run the `StateT` seeded with `s` and retrieve the resulting state.
 execT ::
