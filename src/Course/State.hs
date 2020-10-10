@@ -242,5 +242,27 @@ distinct xs =
 isHappy ::
   Integer
   -> Bool
-isHappy =
-  error "todo: Course.State#isHappy"
+isHappy n =
+    let x = produce applyHappy n
+    in
+    case firstRepeat x of
+      Full 1 -> True
+      _ -> False
+      
+
+square :: Integer -> Integer
+square =
+    join (*)
+
+
+upToN :: Integer -> List Integer
+upToN n = take n $ produce (+1) 1
+
+sumOfSquares :: List Integer -> Integer
+sumOfSquares xs = foldRight (\e acc -> square e + acc) 0 xs
+
+digitsToList :: Integer -> List Integer
+digitsToList = map (toInteger . digitToInt) . listh . show
+
+applyHappy :: Integer -> Integer
+applyHappy = sumOfSquares . digitsToList
