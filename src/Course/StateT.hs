@@ -280,7 +280,9 @@ instance Monad f => Applicative (OptionalT f) where
   pure a =
       let x = pure (pure a)
        in OptionalT x
-  (<*>) (OptionalT f) (OptionalT foa) = OptionalT (f >>= (\oab -> foa >>= (\a -> let x = oab <*> a in pure x)))
+  (<*>) (OptionalT f) (OptionalT foa) =
+      OptionalT (f >>= (\oab -> onFull (\e -> (e <$>) <$> foa) oab))
+      --OptionalT (f >>= (\oab -> foa >>= (\a -> let x = oab <*> a in pure x)))
   --(<*>) optf opta =
       --let x = runOptionalT opta
           --y = runOptionalT optf
