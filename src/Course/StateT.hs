@@ -205,15 +205,7 @@ distinct' ::
   (Ord a, Num a) =>
   List a
   -> List a
-distinct' xs =
-    eval (filtering (isNotRepeat') xs) S.empty
-
-isNotRepeat' :: Ord a => a -> State (S.Set a) Bool
-isNotRepeat' a =
-    State (\s -> 
-        let ins = S.insert a s
-        in if S.notMember a s then (True, ins) else (False, ins
-          ))
+distinct' = distinct 
 
 
 -- | Remove all duplicate elements in a `List`.
