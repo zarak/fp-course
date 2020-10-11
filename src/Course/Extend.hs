@@ -33,8 +33,9 @@ instance Extend ExactlyOne where
     (ExactlyOne a -> b)
     -> ExactlyOne a
     -> ExactlyOne b
-  (<<=) =
-    error "todo: Course.Extend (<<=)#instance ExactlyOne"
+  (<<=) f a =
+      ExactlyOne (f a)
+    
 
 -- | Implement the @Extend@ instance for @List@.
 --
@@ -51,8 +52,9 @@ instance Extend List where
     (List a -> b)
     -> List a
     -> List b
-  (<<=) =
-    error "todo: Course.Extend (<<=)#instance List"
+  (<<=) _ Nil = Nil
+  (<<=) f a@(_:.xs) =
+      (f a) :. ((<<=) f xs)
 
 -- | Implement the @Extend@ instance for @Optional@.
 --
