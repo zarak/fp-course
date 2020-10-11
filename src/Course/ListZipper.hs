@@ -123,8 +123,8 @@ fromList (x:.xs) = IsZ (ListZipper Nil x xs)
 toOptional ::
   MaybeListZipper a
   -> Optional (ListZipper a)
-toOptional =
-  error "todo: Course.ListZipper#toOptional"
+toOptional (IsNotZ) = Empty
+toOptional (IsZ lz) = Full lz
 
 zipper ::
   [a]
