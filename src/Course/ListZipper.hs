@@ -429,11 +429,19 @@ moveLeftN ::
   Int
   -> ListZipper a
   -> MaybeListZipper a
-moveLeftN 0 _ = IsNotZ
-moveLeftN n lz =
-    case moveLeft lz of
-      IsNotZ -> IsNotZ
-      (IsZ lz') -> moveLeftN (n-1) lz'
+moveLeftN n lz
+  | n == 0 = IsZ lz
+  | n > 0  = let moved = moveLeft lz
+             in
+             case moved of
+               IsNotZ -> IsNotZ
+               IsZ newLz -> moveLeftN (n - 1) newLz
+  | otherwise = let moved = moveRight lz 
+                in 
+                case moved of 
+                  IsNotZ -> IsNotZ 
+                  IsZ newLz -> moveLeftN (n + 1) newLz
+
 
 -- | Move the focus right the given number of positions. If the value is negative, move left instead.
 --
@@ -446,8 +454,18 @@ moveRightN ::
   Int
   -> ListZipper a
   -> MaybeListZipper a
-moveRightN =
-  error "todo: Course.ListZipper#moveRightN"
+moveRightN n lz
+  | n == 0 = IsZ lz
+  | n > 0  = let moved = moveRight lz
+             in
+             case moved of
+               IsNotZ -> IsNotZ
+               IsZ newLz -> moveRightN (n - 1) newLz
+  | otherwise = let moved = moveLeft lz 
+                in 
+                case moved of 
+                  IsNotZ -> IsNotZ 
+                  IsZ newLz -> moveRightN (n + 1) newLz
 
 -- | Move the focus left the given number of positions. If the value is negative, move right instead.
 -- If the focus cannot be moved, the given number of times, return the value by which it can be moved instead.
