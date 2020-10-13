@@ -263,10 +263,12 @@ findLeft ::
   (a -> Bool)
   -> ListZipper a
   -> MaybeListZipper a
-findLeft _ (ListZipper Nil _ _) = IsNotZ
-findLeft p lz = 
-    let x = toList lz
-     in _todo
+findLeft p (ListZipper left a right) =
+    let (breakLeft, breakRight) = break p left
+     in case (breakLeft, breakRight) of
+          (_, Nil) -> IsNotZ -- item not found in left list
+          (ls, r :. rs) -> if p r then IsZ (ListZipper rs r (reverse ls ++ a :. right)) else IsNotZ
+              
   
     
 -- | Seek to the right for a location matching a predicate, starting from the
