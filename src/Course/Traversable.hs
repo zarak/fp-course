@@ -55,8 +55,10 @@ instance Traversable Optional where
     (a -> f b)
     -> Optional a
     -> f (Optional b)
-  traverse =
-    error "todo: Course.Traversable traverse#instance Optional"
+  traverse afb oa =
+    case oa of
+      Empty -> pure Empty
+      Full a -> Full <$> afb a 
 
 -- | Sequences a traversable value of structures to a structure of a traversable value.
 --
@@ -72,8 +74,12 @@ sequenceA ::
   (Applicative f, Traversable t) =>
   t (f a)
   -> f (t a)
-sequenceA =
-  error "todo: Course.Traversable#sequenceA"
+sequenceA tfa =
+    traverse id tfa
+    --let x = traverse (\x -> _todo) tfa
+     --in _todo
+--sequence = foldRight (lift2 (:.)) (pure Nil)
+
 
 instance (Traversable f, Traversable g) =>
   Traversable (Compose f g) where
