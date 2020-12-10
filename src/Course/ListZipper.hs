@@ -494,7 +494,7 @@ moveLeftN' ::
   Int
   -> ListZipper a
   -> Either Int (ListZipper a)
-moveLeftN' n lz@(ListZipper l a r)
+moveLeftN' n lz@(ListZipper l _ r)
   | n > 0 && n > length l = Left $ length l
   | n < 0 && n > length r = Left $ length r
   | n > 0 = case moveLeftN n lz of
@@ -527,8 +527,17 @@ moveRightN' ::
   Int
   -> ListZipper a
   -> Either Int (ListZipper a)
-moveRightN' =
-  error "todo: Course.ListZipper#moveRightN'"
+moveRightN' n lz@(ListZipper l _ r)
+  | n > 0 && n > length r = Left $ length r
+  | n < 0 && n > length l = Left $ length l
+  | n > 0 = case moveRightN n lz of
+                  IsNotZ -> Left (length r)
+                  IsZ lz' -> Right lz'
+  | n < 0 = case moveLeftN (-n) lz of
+              IsNotZ -> Left (length l)
+              IsZ lz' -> Right lz'
+  | otherwise = Right lz
+
 
 -- | Move the focus to the given absolute position in the zipper. Traverse the zipper only to the extent required.
 --
