@@ -720,9 +720,10 @@ instance Applicative MaybeListZipper where
 -- [[1] >2< [3,4,5],[] >1< [2,3,4,5]] >[2,1] >3< [4,5]< [[3,2,1] >4< [5],[4,3,2,1] >5< []]
 instance Extend ListZipper where
   (<<=) f lz@(ListZipper l a r) =
-      let y = unfoldr (\x -> _todo) lz
-          IsZ a = fromList y
-       in a
+      let y = lift2 (,) (Full $ f a) ((toOptional . fromList) lz )
+          y' = unfoldr (\x -> y) lz 
+          IsZ a = fromList y'
+       in f <$> a
    
 
 -- | Implement the `Extend` instance for `MaybeListZipper`.
