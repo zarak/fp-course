@@ -495,8 +495,8 @@ moveLeftN' ::
   -> ListZipper a
   -> Either Int (ListZipper a)
 moveLeftN' n lz@(ListZipper l _ r)
-  | n > 0 && n > length l = Left $ length l
-  | n < 0 && n > length r = Left $ length r
+  -- | n > 0 && n > length l = Left $ length l
+  -- | n < 0 && n > length r = Left $ length r
   | n > 0 = case moveLeftN n lz of
                   IsNotZ -> Left (length l)
                   IsZ lz' -> Right lz'
@@ -704,10 +704,12 @@ instance Applicative ListZipper where
 -- >>> IsNotZ <*> IsNotZ
 -- ><
 instance Applicative MaybeListZipper where
-  pure =
-    error "todo: Course.ListZipper pure#instance MaybeListZipper"
-  (<*>) =
-    error "todo: Course.ListZipper (<*>)#instance MaybeListZipper"
+  pure a =
+    IsZ $ ListZipper (repeat a) a (repeat a)
+  (<*>) IsNotZ _ = IsNotZ
+  (<*>) _ IsNotZ = IsNotZ
+  (<*>) (IsZ flz) (IsZ lz) =
+    IsZ $ flz <*> lz
 
 -- | Implement the `Extend` instance for `ListZipper`.
 -- This implementation "visits" every possible zipper value derivable from a given zipper (i.e. all zippers to the left and right).
