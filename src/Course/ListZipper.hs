@@ -494,8 +494,11 @@ moveLeftN' ::
   Int
   -> ListZipper a
   -> Either Int (ListZipper a)
-moveLeftN' n lz@(ListZipper l a r) =
-  error "todo: Course.ListZipper#moveRightN'"
+moveLeftN' n lz
+  | hasLeft lz = Left n
+  | otherwise = 
+      let moveLeft1 = moveLeftLoop lz
+      in moveLeftN' (n-1) moveLeft1
 
 
 -- | Move the focus right the given number of positions. If the value is negative, move left instead.
