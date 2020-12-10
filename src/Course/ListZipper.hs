@@ -494,11 +494,16 @@ moveLeftN' ::
   Int
   -> ListZipper a
   -> Either Int (ListZipper a)
-moveLeftN' n lz
-  | hasLeft lz = Left n
-  | otherwise = 
-      let moveLeft1 = moveLeftLoop lz
-      in moveLeftN' (n-1) moveLeft1
+moveLeftN' n lz@(ListZipper l a r)
+  | n > 0 && n > length l = Left $ length l
+  | n < 0 && n > length r = Left $ length r
+  | n > 0 = case moveLeftN n lz of
+                  IsNotZ -> Left (length l)
+                  IsZ lz' -> Right lz'
+  | n < 0 = case moveRightN (-n) lz of
+              IsNotZ -> Left (length r)
+              IsZ lz' -> Right lz'
+  | otherwise = Right lz
 
 
 -- | Move the focus right the given number of positions. If the value is negative, move left instead.
