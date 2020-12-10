@@ -569,8 +569,8 @@ nth n lz@(ListZipper l _ _)
 index ::
   ListZipper a
   -> Int
-index =
-  error "todo: Course.ListZipper#index"
+index (ListZipper l _ _) =
+  length l
 
 -- | Move the focus to the end of the zipper.
 --
@@ -583,8 +583,9 @@ index =
 end ::
   ListZipper a
   -> ListZipper a
-end =
-  error "todo: Course.ListZipper#end"
+end lz@(ListZipper l _ r) =
+      case nth (length l + length r) lz of
+        IsZ lz' -> lz'
 
 -- | Move the focus to the start of the zipper.
 --
@@ -597,8 +598,10 @@ end =
 start ::
   ListZipper a
   -> ListZipper a
-start =
-  error "todo: Course.ListZipper#start"
+start lz =
+    case nth 0 lz of
+      IsZ lz' -> lz'
+  
 
 -- | Delete the current focus and pull the left values to take the empty position.
 --
@@ -610,8 +613,10 @@ start =
 deletePullLeft ::
   ListZipper a
   -> MaybeListZipper a
-deletePullLeft =
-  error "todo: Course.ListZipper#deletePullLeft"
+deletePullLeft (ListZipper Nil _ _) = IsNotZ
+deletePullLeft (ListZipper (l :. ls) _ r) =
+    IsZ (ListZipper ls l r)
+
 
 -- | Delete the current focus and pull the right values to take the empty position.
 --
@@ -623,8 +628,9 @@ deletePullLeft =
 deletePullRight ::
   ListZipper a
   -> MaybeListZipper a
-deletePullRight =
-  error "todo: Course.ListZipper#deletePullRight"
+deletePullRight (ListZipper _ _ Nil) = IsNotZ
+deletePullRight (ListZipper l _ (r :. rs)) =
+    IsZ (ListZipper l r rs)
 
 -- | Insert at the current focus and push the left values to make way for the new position.
 --
