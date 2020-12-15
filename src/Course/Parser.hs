@@ -99,6 +99,7 @@ unexpectedCharParser ::
   -> Parser a
 unexpectedCharParser c =
   P (\_ -> UnexpectedChar c)
+  --P (const (UnexpectedChar c))
 
 --- | Return a parser that always returns the given parse result.
 ---
@@ -110,7 +111,7 @@ constantParser ::
 constantParser =
   P . const
 
--- | Return a parser that succeeds with a character off the input or fails with an error if the input is empty.
+-- | Return a parser that succeeds with a character of the input or fails with an error if the input is empty.
 --
 -- >>> parse character "abc"
 -- Result >bc< 'a'
@@ -119,8 +120,12 @@ constantParser =
 -- True
 character ::
   Parser Char
-character =
-  error "todo: Course.Parser#character"
+character = P f 
+    where f input = 
+            case input of
+              Nil -> UnexpectedEof
+              x :. xs -> Result xs x
+
 
 -- | Parsers can map.
 -- Write a Functor instance for a @Parser@.
@@ -142,8 +147,9 @@ instance Functor Parser where
 valueParser ::
   a
   -> Parser a
-valueParser =
-  error "todo: Course.Parser#valueParser"
+valueParser a =
+    let x = (\input -> Result input a)
+     in P x
 
 -- | Return a parser that tries the first parser for a successful value.
 --
