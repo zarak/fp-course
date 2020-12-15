@@ -260,10 +260,17 @@ instance Applicative Parser where
 -- >>> parse (list (character *> valueParser 'v')) ""
 -- Result >< ""
 list ::
-  Parser a
+  Parser a 
   -> Parser (List a)
-list =
-  error "todo: Course.Parser#list"
+list pa =
+    undefined
+  --let 
+  --g :: Input -> ParseResult a
+  --g input = case input of 
+              --Nil -> _a
+              --x :. xs -> _b
+   --in P g
+
 
 -- | Return a parser that produces at least one value from the given parser then
 -- continues producing a list of values from the given parser (to ultimately produce a non-empty list).
@@ -281,8 +288,9 @@ list =
 list1 ::
   Parser a
   -> Parser (List a)
-list1 =
-  error "todo: Course.Parser#list1"
+list1 pa = 
+    undefined
+  
 
 -- | Return a parser that produces a character but fails if
 --
@@ -300,8 +308,9 @@ list1 =
 satisfy ::
   (Char -> Bool)
   -> Parser Char
-satisfy =
-  error "todo: Course.Parser#satisfy"
+satisfy f = do
+    c <- character
+    if f c then pure c else unexpectedCharParser c
 
 -- | Return a parser that produces the given character but fails if
 --
