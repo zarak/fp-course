@@ -232,8 +232,11 @@ instance Applicative Parser where
     Parser (a -> b)
     -> Parser a
     -> Parser b
-  (<*>) =
-    error "todo: Course.Parser (<*>)#instance Parser"
+  (<*>) pf pa = do
+      f <- pf
+      a <- pa
+      let b = f a
+      pure b
 
 -- | Return a parser that continues producing a list of values from the given parser.
 --
