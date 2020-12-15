@@ -213,8 +213,12 @@ instance Monad Parser where
     (a -> Parser b)
     -> Parser a
     -> Parser b
-  (=<<) =
-    error "todo: Course.Parser (=<<)#instance Parser"
+  (=<<) f pa =
+    P (\input ->
+        let pra = onResult $ parse pa input
+            --g :: Input -> a -> ParseResult b
+            g input' a = parse (f a) input'
+         in pra g)
 
 -- | Write an Applicative functor instance for a @Parser@.
 -- /Tip:/ Use @(=<<)@.
