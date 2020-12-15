@@ -137,8 +137,11 @@ instance Functor Parser where
     (a -> b)
     -> Parser a
     -> Parser b
-  (<$>) =
-     error "todo: Course.Parser (<$>)#instance Parser"
+  (<$>) f pa =
+      let g = parse pa
+      in P (\input -> 
+          let pr = g input 
+           in f <$> pr)
 
 -- | Return a parser that always succeeds with the given value and consumes no input.
 --
@@ -172,8 +175,14 @@ valueParser a =
   Parser a
   -> Parser a
   -> Parser a
-(|||) =
-  error "todo: Course.Parser#(|||)"
+(|||) parserA parserB =
+    let pra = parse parserA 
+        prb = parse parserB
+    in
+    P (\input -> 
+        let x = isErrorResult (pra input) 
+        in
+        if x then prb input else pra input)
 
 infixl 3 |||
 
