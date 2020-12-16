@@ -510,9 +510,12 @@ surnameParser =
 -- True
 smokerParser ::
   Parser Bool
-smokerParser = do
+smokerParser =
+    is 'y' >>= \y ->
+        is 'n' >>= \n ->
+            pure $ const True
   --is 'y' ||| is 'n'
-  undefined
+
   
 
 -- | Write part of a parser for Person#phoneBody.
