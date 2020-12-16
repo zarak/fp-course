@@ -613,8 +613,13 @@ phoneParser = do
 -- Result >< Person 123 "Fred" "Clarkson" True "123-456.789"
 personParser ::
   Parser Person
-personParser =
-    ageParser >>= 
+personParser = do
+    ag <- ageParser
+    fn <- firstNameParser
+    sn <- surnameParser
+    sm <- smokerParser
+    ph <- phoneParser
+    pure (Person ag fn sn sm ph)
 
 
 -- Make sure all the tests pass!
