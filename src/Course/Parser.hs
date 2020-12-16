@@ -263,7 +263,12 @@ list ::
   Parser a 
   -> Parser (List a)
 list pa =
-    undefined
+    list1 pa ||| pure Nil
+    --f =<< ((pure <$> pa) ||| pure Nil)
+                  ----f :: List (Parser a) -> Parser (List a)
+            --where f input = case input of
+                          --Nil -> pure Nil
+                          --x :. xs -> _todo
   --let 
   --g :: Input -> ParseResult a
   --g input = case input of 
@@ -289,7 +294,7 @@ list1 ::
   Parser a
   -> Parser (List a)
 list1 pa = 
-    undefined
+    lift2 (:.) pa (list pa)
   
 
 -- | Return a parser that produces a character but fails if
@@ -413,7 +418,8 @@ sequenceParser ::
   List (Parser a)
   -> Parser (List a)
 sequenceParser =
-  error "todo: Course.Parser#sequenceParser"
+    let f pa pla = _todo 
+     in foldRight _todo (pure Nil)
 
 -- | Return a parser that produces the given number of values off the given parser.
 -- This parser fails if the given parser fails in the attempt to produce the given number of values.
