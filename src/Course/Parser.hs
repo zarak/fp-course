@@ -365,7 +365,7 @@ space =
 spaces1 ::
   Parser Chars
 spaces1 =
-  error "todo: Course.Parser#spaces1"
+  list1 space
 
 -- | Return a parser that produces a lower-case character but fails if
 --
@@ -418,8 +418,8 @@ sequenceParser ::
   List (Parser a)
   -> Parser (List a)
 sequenceParser =
-    let f pa pla = _todo 
-     in foldRight _todo (pure Nil)
+    -- Implementation of traversable for list
+    foldRight (lift2 (:.)) (pure Nil)
 
 -- | Return a parser that produces the given number of values off the given parser.
 -- This parser fails if the given parser fails in the attempt to produce the given number of values.
@@ -435,8 +435,9 @@ thisMany ::
   Int
   -> Parser a
   -> Parser (List a)
-thisMany =
-  error "todo: Course.Parser#thisMany"
+thisMany n pa =
+    sequenceParser (replicate n pa)
+  
 
 -- | This one is done for you.
 --
@@ -469,7 +470,7 @@ ageParser =
 firstNameParser ::
   Parser Chars
 firstNameParser =
-  error "todo: Course.Parser#firstNameParser"
+    lift2 (:.) upper (list lower)
 
 -- | Write a parser for Person.surname.
 --
@@ -491,7 +492,7 @@ firstNameParser =
 surnameParser ::
   Parser Chars
 surnameParser =
-  error "todo: Course.Parser#surnameParser"
+  lift3 (\a b c -> a :. b ++ c) upper (thisMany 5 lower) (list lower)
 
 -- | Write a parser for Person.smoker.
 --
@@ -510,7 +511,8 @@ surnameParser =
 smokerParser ::
   Parser Bool
 smokerParser =
-  error "todo: Course.Parser#smokerParser"
+    undefined
+  --is 'y' ||| is 'n'
 
 -- | Write part of a parser for Person#phoneBody.
 -- This parser will only produce a string of digits, dots or hyphens.
@@ -532,7 +534,7 @@ smokerParser =
 phoneBodyParser ::
   Parser Chars
 phoneBodyParser =
-  error "todo: Course.Parser#phoneBodyParser"
+  list (digit ||| is '-' ||| is '.')
 
 -- | Write a parser for Person.phone.
 --
@@ -553,8 +555,12 @@ phoneBodyParser =
 -- True
 phoneParser ::
   Parser Chars
-phoneParser =
-  error "todo: Course.Parser#phoneParser"
+phoneParser = do
+  --lift3 (\a b _ -> a :. b) digit phoneBodyParser (is '#')
+    d <- digit
+    z <- phoneBodyParser
+    is '#'
+    pure (d :. z)
 
 -- | Write a parser for Person.
 --
@@ -608,7 +614,8 @@ phoneParser =
 personParser ::
   Parser Person
 personParser =
-  error "todo: Course.Parser#personParser"
+    ageParser >>= 
+
 
 -- Make sure all the tests pass!
 
