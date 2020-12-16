@@ -510,9 +510,10 @@ surnameParser =
 -- True
 smokerParser ::
   Parser Bool
-smokerParser =
-    undefined
+smokerParser = do
   --is 'y' ||| is 'n'
+  undefined
+  
 
 -- | Write part of a parser for Person#phoneBody.
 -- This parser will only produce a string of digits, dots or hyphens.
@@ -615,9 +616,13 @@ personParser ::
   Parser Person
 personParser = do
     ag <- ageParser
+    spaces1
     fn <- firstNameParser
+    spaces1
     sn <- surnameParser
+    spaces1
     sm <- smokerParser
+    spaces1
     ph <- phoneParser
     pure (Person ag fn sn sm ph)
 
