@@ -54,8 +54,18 @@ spaces = do
 tok ::
   Parser a
   -> Parser a
-tok =
-  error "todo: Course.MoreParser#tok"
+tok p =
+    -- Version 1:
+    -- lift2 const p spaces
+    --
+    -- Version 2:
+    -- res <- p
+    -- spaces
+    -- pure res
+    --
+    -- Version 3:
+    p <* spaces
+  
 
 -- | Write a function that parses the given char followed by 0 or more spaces.
 --
