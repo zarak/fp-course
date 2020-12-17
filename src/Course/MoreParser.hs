@@ -274,8 +274,10 @@ betweenCharTok a b pa =
 -- True
 hex ::
   Parser Char
-hex =
-  error "todo: Course.MoreParser#hex"
+hex = do
+    word4 <- replicateA 4 (satisfy isHexDigit)
+    let opt = readHex word4
+    _todo
 
 -- | Write a function that parses the character 'u' followed by 4 hex digits and return the character value.
 --
