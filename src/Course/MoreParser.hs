@@ -126,8 +126,9 @@ quote =
 string ::
   Chars
   -> Parser Chars
-string =
-  error "todo: Course.MoreParser#is"
+string xs =
+    let f = traverse is
+     in f xs
 
 -- | Write a function that parsers the given string, followed by 0 or more spaces.
 --
@@ -142,7 +143,7 @@ stringTok ::
   Chars
   -> Parser Chars
 stringTok =
-  error "todo: Course.MoreParser#stringTok"
+  tok . string
 
 -- | Write a function that tries the given parser, otherwise succeeds by producing the given value.
 --
@@ -157,8 +158,8 @@ option ::
   a
   -> Parser a
   -> Parser a
-option =
-  error "todo: Course.MoreParser#option"
+option a pa =
+  pa ||| pure a
 
 -- | Write a parser that parses 1 or more digits.
 --
@@ -172,7 +173,7 @@ option =
 digits1 ::
   Parser Chars
 digits1 =
-  error "todo: Course.MoreParser#digits1"
+  list1 digit
 
 -- | Write a function that parses one of the characters in the given string.
 --
@@ -186,8 +187,8 @@ digits1 =
 oneof ::
   Chars
   -> Parser Char
-oneof =
-  error "todo: Course.MoreParser#oneof"
+oneof str =
+  satisfy (`elem` str)
 
 -- | Write a function that parses any character, but fails if it is in the given string.
 --
