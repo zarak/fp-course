@@ -227,8 +227,11 @@ between ::
   -> Parser c
   -> Parser a
   -> Parser a
-between =
-  error "todo: Course.MoreParser#between"
+between po pc pa = do
+    po
+    a <- pa
+    pc
+    pure a
 
 -- | Write a function that applies the given parser in between the two given characters.
 --
@@ -250,8 +253,9 @@ betweenCharTok ::
   -> Char
   -> Parser a
   -> Parser a
-betweenCharTok =
-  error "todo: Course.MoreParser#betweenCharTok"
+betweenCharTok a b pa =
+  between (charTok a) (charTok b) pa
+  --between (is a) (is b) pa
 
 -- | Write a function that parses 4 hex digits and return the character value.
 --
