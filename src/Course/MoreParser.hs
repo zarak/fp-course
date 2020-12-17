@@ -79,8 +79,9 @@ tok p =
 charTok ::
   Char
   -> Parser Char
-charTok =
-  error "todo: Course.MoreParser#charTok"
+charTok c = do
+    tok (is c)
+  
 
 -- | Write a parser that parses a comma ',' followed by 0 or more spaces.
 --
