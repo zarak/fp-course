@@ -95,7 +95,7 @@ charTok c = do
 commaTok ::
   Parser Char
 commaTok =
-  error "todo: Course.MoreParser#commaTok"
+  charTok ','
 
 -- | Write a parser that parses either a double-quote or a single-quote.
 --
@@ -112,7 +112,7 @@ commaTok =
 quote ::
   Parser Char
 quote =
-  error "todo: Course.MoreParser#quote"
+  is '"' ||| is '\''
 
 -- | Write a function that parses the given string (fails otherwise).
 --
