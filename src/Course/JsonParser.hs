@@ -109,8 +109,13 @@ toSpecialCharacter c =
 -- True
 jsonString ::
   Parser Chars
-jsonString =
-  error "todo: Course.JsonParser#jsonString"
+jsonString = 
+    between quote quote (list jsonCharParser)
+
+jsonCharParser :: Parser Char
+jsonCharParser = do 
+    c <- character 
+    if c == '"' then unexpectedCharParser c else pure c
 
 -- | Parse a JSON rational.
 --
